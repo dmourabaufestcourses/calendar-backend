@@ -7,7 +7,6 @@ const registerController = async (req, res = response) => {
   const { email, password } = req.body;
   try {
     let usuario = await Usuario.findOne({ email });
-    console.log(usuario);
 
     if (usuario) {
       return res.status(400).json({
