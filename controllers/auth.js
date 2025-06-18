@@ -1,24 +1,33 @@
 const { response } = require("express"); // esto es solo para volver a tener el intellisense
+const { validationResult } = require("express-validator");
 
 const registerController = (req, res = response) => {
-    console.log(req.body);
-    const {name, email, password} = req.body;
+  const result = validationResult(req);
 
-    if(name.length <= 5){
-        return res.status(400).json({
-            ok: false,
-            msg: "name length grather than 5 required."
-        })
-    }
-    
-  res.json({
+  if (!result.isEmpty()) {
+    return res.status(400).json({
+      ok: false,
+      errors: result.mapped(),
+    });
+  }
+
+  res.status(201).json({
     ok: true,
     msg: "register",
-    user: req.body
+    user: req.body,
   });
 };
 
 const loginController = (req, res = response) => {
+  const result = validationResult(req);
+
+  if (!result.isEmpty()) {
+    return res.status(400).json({
+      ok: false,
+      errors: result.mapped(),
+    });
+  }
+
   res.json({
     ok: true,
     msg: "login",
