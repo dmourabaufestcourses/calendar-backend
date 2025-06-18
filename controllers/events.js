@@ -2,9 +2,14 @@ const { response } = require("express");
 const Evento = require("../models/Evento");
 
 const getEventsController = async (req, res = response) => {
+
+  const eventos = await Evento.find().populate("user", "name");
+
+
+
   res.status(200).json({
     ok: true,
-    msg: "getEvents",
+    eventos
   });
 };
 
@@ -13,7 +18,7 @@ const createEventController = async (req, res = response) => {
 
   try {
     evento.user = req.uid;
-    
+
     const respEvent = await evento.save();
 
     res.status(201).json({
