@@ -4,7 +4,8 @@ const {
   loginController,
   refreshTokenController,
 } = require("../controllers/auth");
-const { check, body } = require("express-validator");
+const { body } = require("express-validator");
+const { validateFields } = require("../middlewares/fields-validator");
 
 const router = Router();
 
@@ -17,6 +18,7 @@ router.post(
       "password",
       "Password should be greather or equal than 6 characters"
     ).isLength({ min: 6 }),
+    validateFields,
   ],
   registerController
 );
@@ -29,6 +31,7 @@ router.post(
       "password",
       "Password should be greather or equal than 6 characters"
     ).isLength({ min: 6 }),
+    validateFields,
   ],
   loginController
 );
