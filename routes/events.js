@@ -31,7 +31,16 @@ router.post(
   createEventController
 );
 
-router.put("/:id", uptateEventController);
+router.put(
+  "/:id",
+  [
+    body("title", "Title is required.").notEmpty(),
+    body("start", "Start is required.").custom(isDate),
+    body("end", "End is required.").custom(isDate),
+    validateFields,
+  ],
+  uptateEventController
+);
 
 router.delete("/:id", deleteEventController);
 
