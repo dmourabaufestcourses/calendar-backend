@@ -6,6 +6,7 @@ const {
 } = require("../controllers/auth");
 const { body } = require("express-validator");
 const { validateFields } = require("../middlewares/fields-validator");
+const { validateJWT } = require("../middlewares/validate-jwt");
 
 const router = Router();
 
@@ -36,6 +37,6 @@ router.post(
   loginController
 );
 
-router.get("/refresh-token", refreshTokenController);
+router.get("/refresh-token", validateJWT, refreshTokenController);
 
 module.exports = router;

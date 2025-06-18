@@ -71,7 +71,7 @@ const loginController = async (req, res = response) => {
       ok: true,
       uid: usuario.id,
       name: usuario.name,
-      token
+      token,
     });
   } catch (error) {
     console.log(error);
@@ -82,10 +82,15 @@ const loginController = async (req, res = response) => {
   }
 };
 
-const refreshTokenController = (req, res = response) => {
+const refreshTokenController = async (req, res = response) => {
+  const { uid, name } = req;
+
+  //Regenerate JWT
+  const token = await generateJWT(uid, name);
+
   res.json({
     ok: true,
-    msg: "refrest-token",
+    token,
   });
 };
 
