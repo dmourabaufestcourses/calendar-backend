@@ -7,7 +7,7 @@ const getEventsController = async (req, res = response) => {
   });
 };
 
-const createEventController = async (req, res = response) => {
+const createEventController = async (req, res = response) => {  
   res.status(200).json({
     ok: true,
     msg: "createEvent",
