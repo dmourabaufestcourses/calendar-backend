@@ -1,6 +1,7 @@
 const { response } = require("express"); // esto es solo para volver a tener el intellisense
 const bcrypt = require("bcryptjs");
 const Usuario = require("../models/Usuario");
+const { generateJWT } = require("../helpers/jwt");
 
 const registerController = async (req, res = response) => {
   const { email, password } = req.body;
@@ -23,10 +24,14 @@ const registerController = async (req, res = response) => {
 
     await usuario.save();
 
+    //Generate JWT
+    const token = await generateJWT(usuario.id, usuario.name);
+
     res.status(201).json({
       ok: true,
       uid: usuario.id,
       name: usuario.name,
+      token,
     });
   } catch (error) {
     console.log(error);
@@ -37,11 +42,44 @@ const registerController = async (req, res = response) => {
   }
 };
 
-const loginController = (req, res = response) => {
-  res.json({
-    ok: true,
-    msg: "login",
-  });
+const loginController = async (req, res = response) => {
+  const { email, password } = req.body;
+
+  try {
+    let usuario = await Usuario.findOne({ email });
+
+    if (!usuario) {
+      return res.status(400).json({
+        ok: false,
+        msg: "Invalid credentials.",
+      });
+    }
+
+    // validate passwords
+    const validPassword = bcrypt.compareSync(password, usuario.password);
+    if (!validPassword) {
+      return res.status(400).json({
+        ok: false,
+        msg: "Invalid credentials.",
+      });
+    }
+
+    //Generate JWT
+    const token = await generateJWT(usuario.id, usuario.name);
+
+    res.json({
+      ok: true,
+      uid: usuario.id,
+      name: usuario.name,
+      token
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      ok: false,
+      msg: "Ups, algo salio mal",
+    });
+  }
 };
 
 const refreshTokenController = (req, res = response) => {
