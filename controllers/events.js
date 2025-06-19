@@ -20,7 +20,7 @@ const createEventController = async (req, res = response) => {
 
     res.status(201).json({
       ok: true,
-      respEvent,
+      event: respEvent,
     });
   } catch (error) {
     console.log(error);
